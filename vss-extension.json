@@ -40,6 +40,11 @@
       }
     }
   ],
+  "branding": {
+    "color": "rgb(0, 120, 212)",
+    "theme": "dark",
+    "icon": "content/icon.png"
+  },
   "scopes": [
     "vso.work",
     "vso.work_write"
