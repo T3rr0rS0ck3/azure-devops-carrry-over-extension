@@ -1,0 +1,116 @@
+name: Build and Release Extension
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Install TFX CLI
+      run: npm install -g tfx-cli
+      
+    - name: Extract version from tag
+      id: get_version
+      run: |
+        VERSION=${GITHUB_REF#refs/tags/v}
+        echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+        echo "Extracted version: $VERSION"
+        
+    - name: Update extension version
+      run: |
+        # Update vss-extension.json version
+        sed -i "s/\"version\": \"[^\"]*\"/\"version\": \"${{ steps.get_version.outputs.VERSION }}\"/g" vss-extension.json
+        # Update package.json version
+        sed -i "s/\"version\": \"[^\"]*\"/\"version\": \"${{ steps.get_version.outputs.VERSION }}\"/g" package.json
+        # Verify the changes
+        echo "vss-extension.json version:"
+        grep '"version"' vss-extension.json
+        echo "package.json version:"
+        grep '"version"' package.json
+        
+    - name: Create dist directory
+      run: mkdir -p dist
+        
+    - name: Build extension
+      run: |
+        # Remove any existing .vsix files
+        rm -f *.vsix dist/*.vsix
+        # Create extension package
+        tfx extension create --manifest-globs vss-extension.json --output-path ./dist/
+        
+    - name: Get extension filename
+      id: get_filename
+      run: |
+        FILENAME=$(ls dist/*.vsix | head -1 | xargs basename)
+        echo "FILENAME=$FILENAME" >> $GITHUB_OUTPUT
+        echo "Extension filename: $FILENAME"
+        
+    - name: Create GitHub Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ steps.get_version.outputs.VERSION }}
+        body: |
+          ## Azure DevOps Carry Over Extension v${{ steps.get_version.outputs.VERSION }}
+          
+          ### Features
+          - Transfer unfinished work items between sprints
+          - Automatic sprint detection and pre-selection
+          - Real-time work item preview
+          - Detailed transfer logging
+          
+          ### Installation
+          1. Download the `.vsix` file below
+          2. Go to your Azure DevOps organization
+          3. Navigate to Organization Settings → Extensions → Browse marketplace
+          4. Click "Manage extensions" → "Upload extension"
+          5. Upload the downloaded `.vsix` file
+          
+          ### Usage
+          Go to Azure DevOps → Boards → "Carry Over" tab to use the extension.
+        draft: false
+        prerelease: false
+        
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/${{ steps.get_filename.outputs.FILENAME }}
+        asset_name: ${{ steps.get_filename.outputs.FILENAME }}
+        asset_content_type: application/octet-stream
+        
+    - name: Publish to Azure DevOps Marketplace
+      env:
+        TFX_TOKEN: ${{ secrets.AZURE_DEVOPS_TOKEN }}
+      run: |
+        if [ -n "$TFX_TOKEN" ]; then
+          echo "Publishing to Azure DevOps Marketplace..."
+          tfx extension publish --manifest-globs vss-extension.json --token $TFX_TOKEN
+        else
+          echo "⚠️  AZURE_DEVOPS_TOKEN not set - skipping marketplace publish"
+          echo "To enable automatic publishing to Azure DevOps Marketplace:"
+          echo "1. Go to https://marketplace.visualstudio.com/manage/publishers"
+          echo "2. Create a Personal Access Token with 'Marketplace (publish)' scope"
+          echo "3. Add it as AZURE_DEVOPS_TOKEN secret in GitHub repository settings"
+        fi

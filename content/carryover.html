@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Carry Over Open Items</title>
+  <link rel="stylesheet" href="carryover.css" />
+  <script src="https://unpkg.com/vss-web-extension-sdk@latest/lib/VSS.SDK.min.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Transfer Work Items Between Sprints</h1>
+
+    <div class="sprint-selection">
+      <div class="form-group">
+        <label for="fromSprint">From Sprint:</label>
+        <select id="fromSprint" class="form-control">
+          <option value="">Loading sprints...</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="toSprint">To Sprint:</label>
+        <select id="toSprint" class="form-control">
+          <option value="">Loading sprints...</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="carryOverBtn" class="btn btn-primary" disabled>Transfer Open Items</button>
+    </div>
+
+    <div id="workItemsContainer" class="work-items" style="display: none;">
+      <h3>Found Open Work Items:</h3>
+      <div id="workItemsList"></div>
+      <div class="summary">
+        <span id="itemCount">0</span> work items will be transferred
+      </div>
+    </div>
+
+    <div class="log-container">
+      <h3>Log:</h3>
+      <pre id="log"></pre>
+    </div>
+  </div>
+  <script src="carryover.js"></script>
+</body>
+
+</html>

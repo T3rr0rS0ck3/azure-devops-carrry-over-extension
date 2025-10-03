@@ -1,0 +1,31 @@
+{
+  "name": "azure-devops-carry-over-extension",
+  "version": "1.0.0",
+  "description": "Azure DevOps extension to transfer unfinished work items between sprints",
+  "main": "content/carryover.js",
+  "scripts": {
+    "build": "tfx extension create --manifest-globs vss-extension.json --rev-version",
+    "package": "tfx extension create --manifest-globs vss-extension.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/T3rr0rS0ck3/azure-devops-carrry-over-extension.git"
+  },
+  "keywords": [
+    "azure-devops",
+    "vsts",
+    "extension",
+    "sprint",
+    "work-items",
+    "carry-over"
+  ],
+  "author": "T3rr0rS0ck3",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/T3rr0rS0ck3/azure-devops-carrry-over-extension/issues"
+  },
+  "homepage": "https://github.com/T3rr0rS0ck3/azure-devops-carrry-over-extension#readme",
+  "devDependencies": {
+    "tfx-cli": "^0.15.0"
+  }
+}
