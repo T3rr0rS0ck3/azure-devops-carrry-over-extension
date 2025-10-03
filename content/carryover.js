@@ -268,7 +268,7 @@
   const logToggleBtn = document.getElementById("logToggle");
   const logContent = document.getElementById("logContent");
   const logToggleText = document.getElementById("logToggleText");
-  let logVisible = true;
+  let logVisible = false;
 
   logToggleBtn.addEventListener("click", function() {
     logVisible = !logVisible;
