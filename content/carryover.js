@@ -76,51 +76,62 @@
     });
 
     // Automatically preselect sprints based on current date
-    if (sprints.length >= 1) {
+    if (sprints.length >= 2) {
       const currentDate = new Date();
 
-      // Find From Sprint: Sprint whose END date is closest to current date
-      let fromSprintId = null;
-      let smallestEndDateDiff = Infinity;
-
-      sprints.forEach(sprint => {
-        const endDate = new Date(sprint.attributes.finishDate);
-        const diff = Math.abs(endDate - currentDate);
-        if (diff < smallestEndDateDiff) {
-          smallestEndDateDiff = diff;
-          fromSprintId = sprint.id;
-        }
-      });
-
-      // Find To Sprint: Sprint whose START date is closest to current date
-      let toSprintId = null;
+      // Step 1: Find To Sprint - Sprint whose START date is closest to current date
+      let toSprintIndex = -1;
       let smallestStartDateDiff = Infinity;
 
-      sprints.forEach(sprint => {
+      sprints.forEach((sprint, index) => {
         const startDate = new Date(sprint.attributes.startDate);
         const diff = Math.abs(startDate - currentDate);
         if (diff < smallestStartDateDiff) {
           smallestStartDateDiff = diff;
-          toSprintId = sprint.id;
+          toSprintIndex = index;
         }
       });
 
-      // Set selections
-      if (fromSprintId) {
-        fromSelect.value = fromSprintId;
-        const fromSprint = sprints.find(s => s.id === fromSprintId);
-        log(`🎯 Auto-selected From Sprint: ${fromSprint.name} (end date closest to today)`);
+      // Step 2: Find From Sprint - Previous sprint in chronological order
+      let fromSprintIndex = -1;
+
+      if (toSprintIndex !== -1) {
+        // Sprints are sorted by startDate descending, so we need to find the chronologically previous sprint
+        const toSprint = sprints[toSprintIndex];
+        const toStartDate = new Date(toSprint.attributes.startDate);
+
+        // Find sprint that ends before the To sprint starts
+        for (let i = 0; i < sprints.length; i++) {
+          if (i === toSprintIndex) continue; // Skip the To sprint itself
+
+          const sprint = sprints[i];
+          const sprintStartDate = new Date(sprint.attributes.startDate);
+
+          // Look for sprint that starts before the To sprint
+          if (sprintStartDate < toStartDate) {
+            if (fromSprintIndex === -1 || sprintStartDate > new Date(sprints[fromSprintIndex].attributes.startDate)) {
+              fromSprintIndex = i;
+            }
+          }
+        }
       }
 
-      if (toSprintId) {
-        toSelect.value = toSprintId;
-        const toSprint = sprints.find(s => s.id === toSprintId);
+      // Set selections
+      if (toSprintIndex !== -1) {
+        const toSprint = sprints[toSprintIndex];
+        toSelect.value = toSprint.id;
         log(`🎯 Auto-selected To Sprint: ${toSprint.name} (start date closest to today)`);
       }
 
-      if (fromSprintId) {
+      if (fromSprintIndex !== -1) {
+        const fromSprint = sprints[fromSprintIndex];
+        fromSelect.value = fromSprint.id;
+        log(`🎯 Auto-selected From Sprint: ${fromSprint.name} (previous sprint)`);
         onFromSprintChange(); // Automatically load work items
       }
+    } else if (sprints.length === 1) {
+      // If only one sprint, show a message
+      log("ℹ️ Only one sprint available - please add more sprints for transfer functionality");
     }
   }
 
