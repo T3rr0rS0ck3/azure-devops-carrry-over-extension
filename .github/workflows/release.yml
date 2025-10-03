@@ -5,6 +5,9 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+  
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
@@ -61,13 +64,10 @@ jobs:
         echo "Extension filename: $FILENAME"
         
     - name: Create GitHub Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: softprops/action-gh-release@v1
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ steps.get_version.outputs.VERSION }}
+        tag_name: v${{ steps.get_version.outputs.VERSION }}
+        name: Release v${{ steps.get_version.outputs.VERSION }}
         body: |
           ## Azure DevOps Carry Over Extension v${{ steps.get_version.outputs.VERSION }}
           
@@ -86,18 +86,11 @@ jobs:
           
           ### Usage
           Go to Azure DevOps → Boards → "Carry Over" tab to use the extension.
+        files: ./dist/${{ steps.get_filename.outputs.FILENAME }}
         draft: false
         prerelease: false
-        
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./dist/${{ steps.get_filename.outputs.FILENAME }}
-        asset_name: ${{ steps.get_filename.outputs.FILENAME }}
-        asset_content_type: application/octet-stream
         
     - name: Publish to Azure DevOps Marketplace
       env:
