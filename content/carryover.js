@@ -110,11 +110,11 @@
       // WIQL Query for open work items in sprint
       const wiqlQuery = {
         query: `
-          SELECT [System.Id], [System.Title], [System.WorkItemType], [System.State] 
-          FROM WorkItems 
+          SELECT [System.Id], [System.Title], [System.WorkItemType], [System.State]
+          FROM WorkItems
           WHERE [System.IterationPath] = '${selectedSprint.path}'
-          AND [System.State] <> 'Done' 
-          AND [System.State] <> 'Closed' 
+          AND [System.State] <> 'Done'
+          AND [System.State] <> 'Closed'
           AND [System.State] <> 'Removed'
           ORDER BY [System.Id]
         `
@@ -162,10 +162,11 @@
 
     list.innerHTML = "";
 
-    workItems.forEach(item => {
+    workItems.forEach((item, index) => {
       const div = document.createElement("div");
       div.className = "work-item";
       div.innerHTML = `
+        <input type="checkbox" class="work-item-checkbox" id="workitem-${item.id}" data-item-id="${item.id}" checked>
         <span class="work-item-id">#${item.id}</span>
         <span class="work-item-type">[${item.fields['System.WorkItemType']}]</span>
         <span class="work-item-title">${item.fields['System.Title']}</span>
@@ -176,7 +177,12 @@
 
     count.textContent = workItems.length;
     container.style.display = "block";
-  } async function carryOverItems() {
+
+    // Update transfer count after items are displayed
+    updateTransferCount();
+  }
+
+  async function carryOverItems() {
     const fromSprintId = document.getElementById("fromSprint").value;
     const toSprintId = document.getElementById("toSprint").value;
 
@@ -190,9 +196,19 @@
       return;
     }
 
+    // Get only selected work items
+    const selectedCheckboxes = document.querySelectorAll(".work-item-checkbox:checked");
+    const selectedItemIds = Array.from(selectedCheckboxes).map(cb => parseInt(cb.dataset.itemId));
+    const selectedWorkItems = openWorkItems.filter(item => selectedItemIds.includes(item.id));
+
+    if (selectedWorkItems.length === 0) {
+      log("❌ No work items selected for transfer");
+      return;
+    }
+
     try {
       document.getElementById("carryOverBtn").disabled = true;
-      log(`Transferring ${openWorkItems.length} work items...`);
+      log(`Transferring ${selectedWorkItems.length} selected work items...`);
 
       const toSprintPath = sprints.find(s => s.id === toSprintId).path;
       let successCount = 0;
@@ -204,9 +220,9 @@
         let currentIndex = 0;
 
         function processNextWorkItem() {
-          if (currentIndex >= openWorkItems.length) {
+          if (currentIndex >= selectedWorkItems.length) {
             // All work items processed
-            log(`🎉 Transfer completed: ${successCount}/${openWorkItems.length} work items successfully transferred`);
+            log(`🎉 Transfer completed: ${successCount}/${selectedWorkItems.length} work items successfully transferred`);
 
             // Reset UI
             openWorkItems = [];
@@ -215,7 +231,7 @@
             return;
           }
 
-          const workItem = openWorkItems[currentIndex];
+          const workItem = selectedWorkItems[currentIndex];
 
           // Patch operation for Iteration Path
           const patchDocument = [{
@@ -248,9 +264,10 @@
   function updateCarryOverButton() {
     const fromSprint = document.getElementById("fromSprint").value;
     const toSprint = document.getElementById("toSprint").value;
-    const hasItems = openWorkItems.length > 0;
+    const checkedBoxes = document.querySelectorAll(".work-item-checkbox:checked");
+    const hasSelectedItems = checkedBoxes.length > 0;
 
-    document.getElementById("carryOverBtn").disabled = !fromSprint || !toSprint || !hasItems;
+    document.getElementById("carryOverBtn").disabled = !fromSprint || !toSprint || !hasSelectedItems;
   }
 
   function formatDate(dateString) {
@@ -270,9 +287,9 @@
   const logToggleText = document.getElementById("logToggleText");
   let logVisible = false;
 
-  logToggleBtn.addEventListener("click", function() {
+  logToggleBtn.addEventListener("click", function () {
     logVisible = !logVisible;
-    
+
     if (logVisible) {
       logContent.classList.remove("collapsed");
       logToggleText.textContent = "Hide";
@@ -281,4 +298,40 @@
       logToggleText.textContent = "Show";
     }
   });
+
+  // Checkbox functionality
+  const selectAllBtn = document.getElementById("selectAllBtn");
+  const selectNoneBtn = document.getElementById("selectNoneBtn");
+
+  selectAllBtn.addEventListener("click", function () {
+    const checkboxes = document.querySelectorAll(".work-item-checkbox");
+    checkboxes.forEach(checkbox => checkbox.checked = true);
+    updateTransferCount();
+  });
+
+  selectNoneBtn.addEventListener("click", function () {
+    const checkboxes = document.querySelectorAll(".work-item-checkbox");
+    checkboxes.forEach(checkbox => checkbox.checked = false);
+    updateTransferCount();
+  });
+
+  // Update count when individual checkboxes change
+  document.addEventListener("change", function (event) {
+    if (event.target.classList.contains("work-item-checkbox")) {
+      updateTransferCount();
+    }
+  });
+
+  function updateTransferCount() {
+    const checkedBoxes = document.querySelectorAll(".work-item-checkbox:checked");
+    const count = document.getElementById("itemCount");
+    count.textContent = checkedBoxes.length;
+
+    // Update button state
+    const fromSprint = document.getElementById("fromSprint").value;
+    const toSprint = document.getElementById("toSprint").value;
+    const hasSelectedItems = checkedBoxes.length > 0;
+
+    document.getElementById("carryOverBtn").disabled = !fromSprint || !toSprint || !hasSelectedItems;
+  }
 })();

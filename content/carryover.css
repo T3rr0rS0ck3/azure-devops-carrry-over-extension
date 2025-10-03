@@ -108,6 +108,28 @@ h3 {
   margin-bottom: 24px;
 }
 
+.work-items-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.work-items-header h3 {
+  margin: 0;
+}
+
+.selection-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+#workItemsList {
+  max-height: 400px; /* Etwa 10 Items à ~40px */
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 .work-item {
   display: flex;
   align-items: center;
@@ -115,6 +137,11 @@ h3 {
   padding: 8px 0;
   border-bottom: 1px solid #e9ecef;
   font-size: 14px;
+}
+
+.work-item-checkbox {
+  margin-right: 4px;
+  transform: scale(1.1);
 }
 
 .work-item:last-child {

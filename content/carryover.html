@@ -34,7 +34,13 @@
     </div>
 
     <div id="workItemsContainer" class="work-items" style="display: none;">
-      <h3>Found Open Work Items:</h3>
+      <div class="work-items-header">
+        <h3>Found Open Work Items:</h3>
+        <div class="selection-buttons">
+          <button id="selectAllBtn" class="btn btn-secondary btn-small">Select All</button>
+          <button id="selectNoneBtn" class="btn btn-secondary btn-small">Select None</button>
+        </div>
+      </div>
       <div id="workItemsList"></div>
       <div class="summary">
         <span id="itemCount">0</span> work items will be transferred
