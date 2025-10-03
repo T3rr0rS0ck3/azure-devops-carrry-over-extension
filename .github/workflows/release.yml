@@ -24,8 +24,10 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    - name: Install TFX CLI
-      run: npm install -g tfx-cli
+    - name: Install TFX CLI and TypeScript
+      run: |
+        npm install -g tfx-cli
+        npm install -g typescript
 
     - name: Extract version from tag
       id: get_version
@@ -48,6 +50,17 @@ jobs:
 
     - name: Create dist directory
       run: mkdir -p dist
+
+    - name: Compile TypeScript
+      run: |
+        echo "Compiling TypeScript..."
+        npm run compile
+        # Verify that JavaScript file was generated
+        if [ ! -f "content/carryover.js" ]; then
+          echo "❌ TypeScript compilation failed - carryover.js not found"
+          exit 1
+        fi
+        echo "✅ TypeScript compilation successful"
 
     - name: Build extension
       run: |
@@ -98,6 +111,8 @@ jobs:
       run: |
         if [ -n "$TFX_TOKEN" ]; then
           echo "Publishing to Azure DevOps Marketplace..."
+          # Ensure TypeScript is compiled before publishing
+          npm run compile
           tfx extension publish --manifest-globs vss-extension.json --token $TFX_TOKEN
         else
           echo "⚠️  AZURE_DEVOPS_TOKEN not set - skipping marketplace publish"

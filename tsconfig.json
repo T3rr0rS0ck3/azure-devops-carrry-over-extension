@@ -1,0 +1,31 @@
+{
+    "compilerOptions": {
+        "target": "ES2018",
+        "module": "none",
+        "lib": [
+            "ES2018",
+            "DOM"
+        ],
+        "outDir": "./content",
+        "rootDir": "./content",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noUnusedLocals": false,
+        "noUnusedParameters": false,
+        "removeComments": true,
+        "declaration": false,
+        "sourceMap": true
+    },
+    "include": [
+        "content/**/*.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist"
+    ]
+}

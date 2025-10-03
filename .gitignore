@@ -51,3 +51,5 @@ jspm_packages/
 .Trashes
 ehthumbs.db
 Thumbs.db
+content/carryover.js.map
+content/carryover.js
