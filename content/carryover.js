@@ -263,4 +263,22 @@
     logElement.textContent += `[${timestamp}] ${message}\n`;
     logElement.scrollTop = logElement.scrollHeight;
   }
+
+  // Log toggle functionality
+  const logToggleBtn = document.getElementById("logToggle");
+  const logContent = document.getElementById("logContent");
+  const logToggleText = document.getElementById("logToggleText");
+  let logVisible = true;
+
+  logToggleBtn.addEventListener("click", function() {
+    logVisible = !logVisible;
+    
+    if (logVisible) {
+      logContent.classList.remove("collapsed");
+      logToggleText.textContent = "Hide";
+    } else {
+      logContent.classList.add("collapsed");
+      logToggleText.textContent = "Show";
+    }
+  });
 })();
