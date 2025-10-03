@@ -75,11 +75,52 @@
       toSelect.add(option2);
     });
 
-    // Automatically preselect last and current sprint
-    if (sprints.length >= 2) {
-      fromSelect.value = sprints[1].id; // Previous sprint
-      toSelect.value = sprints[0].id;   // Current sprint
-      onFromSprintChange(); // Automatically load work items
+    // Automatically preselect sprints based on current date
+    if (sprints.length >= 1) {
+      const currentDate = new Date();
+
+      // Find From Sprint: Sprint whose END date is closest to current date
+      let fromSprintId = null;
+      let smallestEndDateDiff = Infinity;
+
+      sprints.forEach(sprint => {
+        const endDate = new Date(sprint.attributes.finishDate);
+        const diff = Math.abs(endDate - currentDate);
+        if (diff < smallestEndDateDiff) {
+          smallestEndDateDiff = diff;
+          fromSprintId = sprint.id;
+        }
+      });
+
+      // Find To Sprint: Sprint whose START date is closest to current date
+      let toSprintId = null;
+      let smallestStartDateDiff = Infinity;
+
+      sprints.forEach(sprint => {
+        const startDate = new Date(sprint.attributes.startDate);
+        const diff = Math.abs(startDate - currentDate);
+        if (diff < smallestStartDateDiff) {
+          smallestStartDateDiff = diff;
+          toSprintId = sprint.id;
+        }
+      });
+
+      // Set selections
+      if (fromSprintId) {
+        fromSelect.value = fromSprintId;
+        const fromSprint = sprints.find(s => s.id === fromSprintId);
+        log(`🎯 Auto-selected From Sprint: ${fromSprint.name} (end date closest to today)`);
+      }
+
+      if (toSprintId) {
+        toSelect.value = toSprintId;
+        const toSprint = sprints.find(s => s.id === toSprintId);
+        log(`🎯 Auto-selected To Sprint: ${toSprint.name} (start date closest to today)`);
+      }
+
+      if (fromSprintId) {
+        onFromSprintChange(); // Automatically load work items
+      }
     }
   }
 
