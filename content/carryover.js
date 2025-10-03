@@ -224,9 +224,17 @@
             // All work items processed
             log(`🎉 Transfer completed: ${successCount}/${selectedWorkItems.length} work items successfully transferred`);
 
-            // Reset UI
-            openWorkItems = [];
-            document.getElementById("workItemsContainer").style.display = "none";
+            // Reload work items from the source sprint to show remaining items
+            const fromSprintId = document.getElementById("fromSprint").value;
+            if (fromSprintId) {
+              log("🔄 Reloading remaining work items...");
+              loadWorkItems(fromSprintId);
+            } else {
+              // Fallback: Reset UI if no sprint selected
+              openWorkItems = [];
+              document.getElementById("workItemsContainer").style.display = "none";
+            }
+
             document.getElementById("carryOverBtn").disabled = false;
             return;
           }
