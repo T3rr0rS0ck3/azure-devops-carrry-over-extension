@@ -5,6 +5,7 @@
   "version": "1.0.23",
   "name": "Carry Over Open Work Items",
   "description": "Transfers all unfinished work items from the previous sprint to the current one.",
+  "public": true,
   "categories": [
     "Azure Boards"
   ],
