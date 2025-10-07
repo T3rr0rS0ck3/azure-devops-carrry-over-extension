@@ -1,38 +1,38 @@
 # Carry Over Open Work Items
 
-Diese Azure DevOps Extension automatisiert den Prozess, offene Work Items aus dem letzten Sprint in den aktuellen Sprint zu übernehmen.
+This Azure DevOps extension automates the process of transferring all unfinished work items from the previous sprint to the current one.
 
-## 🚀 Funktionen
+## 🚀 Features
 
-- Übernimmt **alle nicht erledigten Work Items** automatisch aus dem vorherigen Sprint.
-- Funktioniert direkt im **Boards → Sprints → Backlog** über einen Button in der Toolbar.
-- Unterstützt **alle Work Item-Typen** (Tasks, Bugs, PBIs, User Stories).
-- Nutzt die **Azure DevOps REST API** für maximale Sicherheit und Kompatibilität.
+- Automatically carries over **all unfinished work items** from the last sprint.  
+- Works directly from **Boards → Sprints → Backlog** via a toolbar button.  
+- Supports **all work item types** (Tasks, Bugs, PBIs, User Stories).  
+- Uses the **Azure DevOps REST API** for maximum reliability and compatibility.
 
-## 🧭 Verwendung
+## 🧭 Usage
 
-1. Installiere die Extension in deiner Organisation.
-2. Öffne **Boards → Sprints → Backlog**.
-3. Klicke oben in der Toolbar auf **„Carry Over Open Items“**.
-4. Die Extension übernimmt automatisch alle offenen Work Items aus dem vorherigen Sprint in den aktuellen.
+1. Install the extension in your organization.  
+2. Navigate to **Boards → Sprints → Backlog**.  
+3. Click on **“Carry Over Open Items”** in the toolbar.  
+4. The extension will automatically move all open work items from the previous sprint to the current one.
 
-## ⚙️ Berechtigungen
+## ⚙️ Permissions
 
-Die Extension benötigt folgende Scopes:
-- `vso.work`
-- `vso.work_write`
+The extension requires the following scopes:
+- `vso.work`  
+- `vso.work_write`  
 
-Diese sind notwendig, um Work Items zu lesen und zu aktualisieren.
+These are necessary to read and update work items.
 
-## 🛠️ Geplante Erweiterungen
+## 🛠️ Planned Enhancements
 
-- Option zur automatischen Sprint-Erkennung
-- Filtern nach Work Item-Typen
-- Automatische Benachrichtigung bei Übernahme
+- Automatic sprint detection option  
+- Filtering by work item type  
+- Notifications after successful carry-over  
 
 ---
 
-**Publisher:** T3rr0rS0ck3
-**Version:** 1.0.12
-**Kategorie:** Azure Boards
-**Repository:** https://github.com/T3rr0rS0ck3/azure-devops-carrry-over-extension
+**Publisher:** T3rr0rS0ck3  
+**Version:** 1.0.12  
+**Category:** Azure Boards  
+**Repository:** [GitHub – azure-devops-carry-over-extension](https://github.com/T3rr0rS0ck3/azure-devops-carrry-over-extension)
