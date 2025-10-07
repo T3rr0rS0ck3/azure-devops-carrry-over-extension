@@ -17,7 +17,7 @@
       "id": "Microsoft.VisualStudio.Services"
     }
   ],
-  "overview": "overview.md",
+  "overview": "content/overview.md",
   "files": [
     {
       "path": "content",
@@ -25,10 +25,6 @@
     },
     {
       "path": "vss-extension.json",
-      "addressable": false
-    },
-    {
-      "path": "overview.md",
       "addressable": false
     }
   ],
@@ -57,12 +53,12 @@
   ],
   "content": {
     "details": {
-      "path": "overview.md"
+      "path": "content/overview.md"
     }
   },
   "assets": [
     {
-      "path": "overview.md",
+      "path": "content/overview.md",
       "type": "Microsoft.VisualStudio.Services.Content.Details"
     }
   ]
