@@ -111,13 +111,11 @@ jobs:
       run: |
         if [ -n "$TFX_TOKEN" ]; then
           echo "Publishing to Azure DevOps Marketplace..."
-          # Ensure TypeScript is compiled before publishing
           npm run compile
-          tfx extension publish --manifest-globs vss-extension.json --token $TFX_TOKEN
+          FILENAME=$(ls dist/*.vsix | head -1)
+          echo "Using package: $FILENAME"
+          tfx extension publish --vsix "$FILENAME" --token $TFX_TOKEN
         else
           echo "⚠️  AZURE_DEVOPS_TOKEN not set - skipping marketplace publish"
-          echo "To enable automatic publishing to Azure DevOps Marketplace:"
-          echo "1. Go to https://marketplace.visualstudio.com/manage/publishers"
-          echo "2. Create a Personal Access Token with 'Marketplace (publish)' scope"
-          echo "3. Add it as AZURE_DEVOPS_TOKEN secret in GitHub repository settings"
         fi
+
