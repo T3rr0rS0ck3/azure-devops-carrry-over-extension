@@ -67,7 +67,7 @@ jobs:
         # Remove any existing .vsix files
         rm -f *.vsix dist/*.vsix
         # Create extension package
-        tfx extension create --manifest-globs vss-extension.json --output-path ./dist/ --root
+        tfx extension create --manifest-globs vss-extension.json --output-path ./dist/ --root .
 
     - name: Get extension filename
       id: get_filename
