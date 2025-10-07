@@ -24,6 +24,10 @@
     {
       "path": "vss-extension.json",
       "addressable": false
+    },
+    {
+      "path": "overview.md",
+      "addressable": false
     }
   ],
   "contributions": [
@@ -48,5 +52,10 @@
   "scopes": [
     "vso.work",
     "vso.work_write"
-  ]
+  ],
+  "content": {
+    "details": {
+      "path": "overview.md"
+    }
+  }
 }
