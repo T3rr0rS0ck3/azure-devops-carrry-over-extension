@@ -113,7 +113,7 @@ jobs:
           echo "Publishing to Azure DevOps Marketplace..."
           # Ensure TypeScript is compiled before publishing
           npm run compile
-          tfx extension publish --manifest-globs vss-extension.json --token $TFX_TOKEN
+          tfx extension publish --manifest-globs vss-extension.json --token $TFX_TOKEN --root .
         else
           echo "⚠️  AZURE_DEVOPS_TOKEN not set - skipping marketplace publish"
           echo "To enable automatic publishing to Azure DevOps Marketplace:"
