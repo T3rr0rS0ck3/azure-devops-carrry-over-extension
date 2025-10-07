@@ -67,7 +67,7 @@ jobs:
         # Remove any existing .vsix files
         rm -f *.vsix dist/*.vsix
         # Create extension package
-        tfx extension create --manifest-globs vss-extension.json --output-path ./dist/ --root .
+        tfx extension create --manifest-globs vss-extension.json --output-path ./dist/
 
     - name: Get extension filename
       id: get_filename
@@ -113,7 +113,7 @@ jobs:
           echo "Publishing to Azure DevOps Marketplace..."
           # Ensure TypeScript is compiled before publishing
           npm run compile
-          tfx extension publish --manifest-globs vss-extension.json --token $TFX_TOKEN --root .
+          tfx extension publish --manifest-globs vss-extension.json --token $TFX_TOKEN
         else
           echo "⚠️  AZURE_DEVOPS_TOKEN not set - skipping marketplace publish"
           echo "To enable automatic publishing to Azure DevOps Marketplace:"

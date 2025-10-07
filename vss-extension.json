@@ -17,6 +17,7 @@
       "id": "Microsoft.VisualStudio.Services"
     }
   ],
+  "overview": "overview.md",
   "files": [
     {
       "path": "content",
