@@ -125,7 +125,7 @@ h3 {
 }
 
 #workItemsList {
-  max-height: 400px; /* Etwa 10 Items à ~40px */
+  max-height: 290px; /* Etwa 10 Items à ~40px */
   overflow-y: auto;
   overflow-x: hidden;
 }
